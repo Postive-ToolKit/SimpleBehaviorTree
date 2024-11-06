@@ -1,9 +1,9 @@
-using Postive.Runtime.BehaviourTrees.Data;
 using UnityEditor;
-using UnityEngine;
 
-namespace Editor.BehaviourTrees.Attributes
+
+namespace BehaviourTrees.Editor.Attributes
 {
     public class BTStateDrawer : PropertyDrawer {
+        
     }
 }
