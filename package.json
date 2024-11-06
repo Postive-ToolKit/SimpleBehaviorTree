@@ -1,0 +1,12 @@
+﻿{
+  "name": "com.positive.simple-behaviour-tree",
+  "version": "1.0.0",
+  "displayName": "Simple Behaviour Tree",
+  "description": "Simple Behaviour Tree is a simple and easy to use behaviour tree system for Unity.",
+  "unity": "2019.4",
+  "author": {
+    "name": "Positive",
+    "email": "postive12@gmail.com",
+    "url": "https://postiveground.com"
+  }
+}
