@@ -1,4 +1,6 @@
-﻿namespace Postive.BehaviourTrees.Runtime.Nodes.Compositors
+﻿using Postive.BehaviourTrees.Runtime.Data;
+
+namespace Postive.BehaviourTrees.Runtime.Nodes.Compositors
 {
     public class SelectorNode : CompositeNode
     {

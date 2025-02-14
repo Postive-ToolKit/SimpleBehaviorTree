@@ -1,4 +1,6 @@
-﻿namespace Postive.BehaviourTrees.Runtime.Nodes.Decorators
+﻿using Postive.BehaviourTrees.Runtime.Data;
+
+namespace Postive.BehaviourTrees.Runtime.Nodes.Decorators
 {
     public class InvertNode : DecoratorNode
     {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Postive.BehaviourTrees.Runtime.Data;
 using Postive.BehaviourTrees.Runtime.Nodes;
 using Postive.BehaviourTrees.Runtime.Nodes.Compositors;
 using Postive.BehaviourTrees.Runtime.Nodes.Decorators;
@@ -18,13 +19,13 @@ namespace Postive.BehaviourTrees.Runtime
         public bool IsCloned => _isCloned;
         public GameObject Owner { get; private set; } = null;
         public BTNode Root;
-        public BTNode.BTState TreeState = BTNode.BTState.RUNNING;
+        public BTState TreeState = BTState.RUNNING;
         public List<BTNode> Nodes = new List<BTNode>();
         private BlackBoard _lastBlackBoard = new BlackBoard();
         private bool _isCloned = false;
-        public BTNode.BTState BTUpdate(BlackBoard blackBoard) {
+        public BTState BTUpdate(BlackBoard blackBoard) {
             _lastBlackBoard = blackBoard;
-            if (Root.State == BTNode.BTState.RUNNING || Root.State == BTNode.BTState.NOT_ENTERED) {
+            if (Root.State == BTState.RUNNING || Root.State == BTState.NOT_ENTERED) {
                 TreeState = Root.Run(_lastBlackBoard);
             }
             return TreeState;
@@ -197,7 +198,7 @@ namespace Postive.BehaviourTrees.Runtime
         public void Stop() {
             Root.BTStop(_lastBlackBoard);
             for (int i = 0; i < Nodes.Count; i++) {
-                Nodes[i].State = BTNode.BTState.NOT_ENTERED;
+                Nodes[i].State = BTState.NOT_ENTERED;
             }
         }
         public void OnDrawGizmos() {

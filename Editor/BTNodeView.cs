@@ -1,5 +1,6 @@
 ﻿using System;
 using Postive.BehaviourTrees.Runtime.Conditions;
+using Postive.BehaviourTrees.Runtime.Data;
 using Postive.BehaviourTrees.Runtime.Nodes;
 using Postive.BehaviourTrees.Runtime.Nodes.Actions;
 using Postive.BehaviourTrees.Runtime.Nodes.Compositors;
@@ -82,13 +83,13 @@ namespace Postive.BehaviourTrees.Editor
             }
             switch (_node.State)
             {
-                case BTNode.BTState.SUCCESS:
+                case BTState.SUCCESS:
                     AddToClassList("success");
                     break;
-                case BTNode.BTState.FAILURE:
+                case BTState.FAILURE:
                     AddToClassList("failure");
                     break;
-                case BTNode.BTState.NOT_ENTERED:
+                case BTState.NOT_ENTERED:
                     AddToClassList("not-entered");
                     break;
             }

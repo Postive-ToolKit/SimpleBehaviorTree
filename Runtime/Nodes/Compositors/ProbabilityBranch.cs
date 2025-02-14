@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Postive.BehaviourTrees.Runtime.Data;
 using UnityEngine;
 using Random = UnityEngine.Random;
 

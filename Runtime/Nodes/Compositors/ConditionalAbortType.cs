@@ -1,4 +1,4 @@
-namespace Postive.BehaviourTrees.Runtime.Nodes
+namespace Postive.BehaviourTrees.Runtime.Nodes.Compositors
 {
     public enum ConditionalAbortType
     {

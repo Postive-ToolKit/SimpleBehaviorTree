@@ -1,4 +1,5 @@
-﻿using Postive.BehaviourTrees.Runtime.Nodes;
+﻿using Postive.BehaviourTrees.Runtime.Data;
+using Postive.BehaviourTrees.Runtime.Nodes;
 using UnityEngine;
 
 namespace Postive.BehaviourTrees.Runtime.Conditions.BlackBoards

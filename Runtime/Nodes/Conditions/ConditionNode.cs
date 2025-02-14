@@ -1,3 +1,4 @@
+using Postive.BehaviourTrees.Runtime.Data;
 using Postive.BehaviourTrees.Runtime.Nodes;
 
 namespace Postive.BehaviourTrees.Runtime.Conditions

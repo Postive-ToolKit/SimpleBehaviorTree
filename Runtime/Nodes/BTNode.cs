@@ -1,17 +1,11 @@
 ﻿using System;
+using Postive.BehaviourTrees.Runtime.Data;
 using UnityEngine;
 
 namespace Postive.BehaviourTrees.Runtime.Nodes
 {
     public abstract class BTNode : ScriptableObject
     {
-        public enum BTState
-        {
-            NOT_ENTERED,
-            RUNNING,
-            SUCCESS,
-            FAILURE
-        }
         public virtual string NodeCategory => "Default";
         [HideInInspector] public BTState State = BTState.NOT_ENTERED;
         [HideInInspector] public string GUID;

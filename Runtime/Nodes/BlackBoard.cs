@@ -8,7 +8,7 @@ namespace Postive.BehaviourTrees.Runtime.Nodes
     [Serializable]
     public class BlackBoard
     {
-        [HideInInspector]public BlackBoard Parent;
+        [HideInInspector] public BlackBoard Parent;
 
         public Dictionary<string, object> Data {
             get {
