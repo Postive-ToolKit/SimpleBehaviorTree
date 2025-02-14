@@ -127,6 +127,9 @@ namespace Postive.BehaviourTrees.Runtime.Nodes
             BTNode clone;
             if (Application.isPlaying) {
                 clone = Instantiate(this);
+                clone.name = GetType().Name;
+                clone._position = _position;
+                clone.GUID = GUID;
             }
             else {
                 clone = CreateInstance(GetType()) as BTNode;
