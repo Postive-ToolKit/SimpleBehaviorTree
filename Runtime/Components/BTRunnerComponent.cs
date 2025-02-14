@@ -1,4 +1,5 @@
 ﻿using System;
+using Postive.BehaviourTrees.Runtime.Data;
 using Postive.BehaviourTrees.Runtime.Nodes;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -40,14 +41,13 @@ namespace Postive.BehaviourTrees.Runtime.Components
             SetTree(_behaviourTree);
         }
         private void Update() {
-            //return;
-            // _time += Time.deltaTime;
-            // if (_time < BEHAVIOUR_TREE_UPDATE_INTERVAL) return;
-            // _time = 0;
             if (_behaviourTree == null) return;
             if (!_behaviourTree.IsCloned) return;
             if (_isPaused) return;
-            _behaviourTree.BTUpdate(_blackBoard);
+            var lastState = _behaviourTree.BTUpdate(_blackBoard);
+            if (lastState == BTState.FAILURE || lastState == BTState.SUCCESS) {
+                Stop();
+            }
         }
         private void LateUpdate() {
             if (_nextTree == null) return;
@@ -80,6 +80,7 @@ namespace Postive.BehaviourTrees.Runtime.Components
             _behaviourTree.Stop();
             _isPaused = true;
             _isStopped = true;
+            OnTreeStopped?.Invoke();
         }
         public void Play() {
             _behaviourTree.Stop();
