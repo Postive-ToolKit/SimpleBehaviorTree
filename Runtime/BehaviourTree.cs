@@ -16,6 +16,31 @@ namespace Postive.BehaviourTrees.Runtime
     [CreateAssetMenu(fileName = "BehaviourTree", menuName = "AI/BehaviourTree")]
     public class BehaviourTree : ScriptableObject
     {
+        #region Static Parts
+        private static event Action<BTNode> NodeModifier;
+        /// <summary>
+        /// Add a modifier to the node.
+        /// This modifier will be called when a node is created or cloned.
+        /// </summary>
+        /// <param name="modifier"> The modifier to add. </param>
+        public static void AddNodeModifier(Action<BTNode> modifier)
+        {
+            if (modifier == null)
+                return;
+            NodeModifier += modifier;
+        }
+        
+        /// <summary>
+        /// Remove a modifier from the node.
+        /// </summary>
+        /// <param name="modifier"> The modifier to remove. </param>
+        public static void RemoveNodeModifier(Action<BTNode> modifier)
+        {
+            if (modifier == null)
+                return;
+            NodeModifier -= modifier;
+        }
+        #endregion
         public bool IsCloned => _isCloned;
         public GameObject Owner { get; private set; } = null;
         public BTNode Root;
@@ -30,6 +55,91 @@ namespace Postive.BehaviourTrees.Runtime
             }
             return TreeState;
         }
+
+        /// <summary>
+        /// Get all children of a node
+        /// </summary>
+        /// <param name="parent"> The parent node. </param>
+        /// <returns> The children of the parent node. </returns>
+        public List<BTNode> GetChildren(BTNode parent)
+        {
+            List<BTNode> children = new List<BTNode>();
+            BTRootNode root = parent as BTRootNode;
+            if (root != null && root.Child != null) {
+                children.Add(root.Child);
+            }
+            DecoratorNode decorator = parent as DecoratorNode;
+            if (decorator != null && decorator.Child != null) {
+                children.Add(decorator.Child);
+            }
+            CompositeNode composite = parent as CompositeNode;
+            if (composite != null) {
+                children.AddRange(composite.Children);
+                return children;
+            }
+            return children;
+        }
+        /// <summary>
+        /// Clone tree with new owner
+        /// </summary>
+        /// <param name="owner"> The owner of the new tree. </param>
+        /// <returns> The cloned tree. </returns>
+        public BehaviourTree Clone(GameObject owner)
+        {
+            var tree = Instantiate(this);
+            tree.Owner = owner;
+            tree.Root = tree.Root.Clone();
+            tree.Nodes.Clear();
+            tree._isCloned = true;
+            Traverse(tree.Root, node => {
+                node.Tree = tree;
+                tree.Nodes.Add(node);
+                NodeModifier?.Invoke(node);
+            });
+            return tree;
+        }
+        public void OnValidate() {
+            Nodes.RemoveAll(child => child == null);
+            foreach (var node in Nodes) {
+                node.OnValidate();
+            }
+        }
+        /// <summary>
+        /// Traverse the tree
+        /// </summary>
+        /// <param name="node"> The node to start from. </param>
+        /// <param name="visitor"> The visitor function. </param>
+        private void Traverse(BTNode node, Action<BTNode> visitor)
+        {
+            if (!node) return;
+            visitor.Invoke(node);
+            var children = GetChildren(node);
+            foreach (var child in children) {
+                Traverse(child, visitor);
+            }
+        }
+        /// <summary>
+        /// Awake the tree
+        /// </summary>
+        public void OnAwake() {
+            foreach (var node in Nodes) {
+                node.OnAwake();
+            }
+        }
+
+        public void Stop() {
+            Root.BTStop(_lastBlackBoard);
+            for (int i = 0; i < Nodes.Count; i++) {
+                Nodes[i].State = BTState.NOT_ENTERED;
+            }
+        }
+        public void OnDrawGizmos() {
+            for(int i = 0; i < Nodes.Count; i++) {
+                Nodes[i].OnDrawGizmos();
+            }
+        }
+        
+        #region Editor Methods
 #if UNITY_EDITOR
         public void SetEditorOwner(GameObject owner) {
             Owner = owner;
@@ -125,86 +235,6 @@ namespace Postive.BehaviourTrees.Runtime
             EditorUtility.SetDirty(this);
         }
 #endif
-        /// <summary>
-        /// Get all children of a node
-        /// </summary>
-        /// <param name="parent"> The parent node. </param>
-        /// <returns> The children of the parent node. </returns>
-        public List<BTNode> GetChildren(BTNode parent)
-        {
-            List<BTNode> children = new List<BTNode>();
-            BTRootNode root = parent as BTRootNode;
-            if (root != null && root.Child != null) {
-                children.Add(root.Child);
-            }
-            DecoratorNode decorator = parent as DecoratorNode;
-            if (decorator != null && decorator.Child != null) {
-                children.Add(decorator.Child);
-            }
-            CompositeNode composite = parent as CompositeNode;
-            if (composite != null) {
-                children.AddRange(composite.Children);
-                return children;
-            }
-            return children;
-        }
-        /// <summary>
-        /// Clone tree with new owner
-        /// </summary>
-        /// <param name="owner"> The owner of the new tree. </param>
-        /// <returns> The cloned tree. </returns>
-        public BehaviourTree Clone(GameObject owner)
-        {
-            var tree = Instantiate(this);
-            tree.Owner = owner;
-            tree.Root = tree.Root.Clone();
-            tree.Nodes.Clear();
-            tree._isCloned = true;
-            Traverse(tree.Root, node => {
-                node.Tree = tree;
-                tree.Nodes.Add(node);
-            });
-            return tree;
-        }
-        public void OnValidate() {
-            Nodes.RemoveAll(child => child == null);
-            foreach (var node in Nodes) {
-                node.OnValidate();
-            }
-        }
-        /// <summary>
-        /// Traverse the tree
-        /// </summary>
-        /// <param name="node"> The node to start from. </param>
-        /// <param name="visitor"> The visitor function. </param>
-        private void Traverse(BTNode node, Action<BTNode> visitor)
-        {
-            if (!node) return;
-            visitor.Invoke(node);
-            var children = GetChildren(node);
-            foreach (var child in children) {
-                Traverse(child, visitor);
-            }
-        }
-        /// <summary>
-        /// Awake the tree
-        /// </summary>
-        public void OnAwake() {
-            foreach (var node in Nodes) {
-                node.OnAwake();
-            }
-        }
-
-        public void Stop() {
-            Root.BTStop(_lastBlackBoard);
-            for (int i = 0; i < Nodes.Count; i++) {
-                Nodes[i].State = BTState.NOT_ENTERED;
-            }
-        }
-        public void OnDrawGizmos() {
-            for(int i = 0; i < Nodes.Count; i++) {
-                Nodes[i].OnDrawGizmos();
-            }
-        }
+        #endregion
     }
 }
