@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Postive.BehaviourTrees.Runtime.Nodes.Decorators
 {
-    [BTCategory("BlackBoard", "Decorator that provides a blackboard context for child nodes.")]
+    [BTInfo("BlackBoard", "Decorator that provides a blackboard context for child nodes.")]
     public class BlackBoardNode : DecoratorNode
     {
         public BlackBoard BlackBoard => _blackBoard;

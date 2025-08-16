@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Postive.BehaviourTrees.Runtime.Nodes.Actions.BlackBoards
 {
-    [BTCategory("BlackBoard", "Passes a message to the blackboard with a specified key.")]
+    [BTInfo("BlackBoard", "Passes a message to the blackboard with a specified key.")]
     public class MessagePassNode : ActionNode
     {
         [SerializeField] private string _key = "Key";

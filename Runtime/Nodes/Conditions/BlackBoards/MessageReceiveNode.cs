@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Postive.BehaviourTrees.Runtime.Conditions.BlackBoards
 {
-    [BTCategory("BlackBoard", "Checks if a message received from the blackboard matches a specified value.")]
+    [BTInfo("BlackBoard", "Checks if a message received from the blackboard matches a specified value.")]
     public class MessageReceiveNode : ConditionNode
     {
         [SerializeField] private string _key = "Key";

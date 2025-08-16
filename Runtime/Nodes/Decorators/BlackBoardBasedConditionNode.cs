@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Postive.BehaviourTrees.Runtime.Nodes.Decorators
 {
-    [BTCategory("BlackBoard", "Checks if a key exists in the blackboard and runs the child node if it does.")]
+    [BTInfo("BlackBoard", "Checks if a key exists in the blackboard and runs the child node if it does.")]
     public class BlackBoardBasedConditionNode : DecoratorNode {
         [SerializeField] private string _key;
         protected override BTState OnRun(BlackBoard blackBoard)

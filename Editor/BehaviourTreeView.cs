@@ -358,7 +358,7 @@ namespace Postive.BehaviourTrees.Editor
         
         private string GetNodeCategory(Type type)
         {
-            var attribute = GetAttribute<BTCategoryAttribute>(type);
+            var attribute = GetAttribute<BTInfoAttribute>(type);
             return attribute != null ? attribute.Category : "Base";
         }
         #endregion
