@@ -1,11 +1,12 @@
+using Postive.BehaviourTrees.Runtime.Attributes;
 using Postive.BehaviourTrees.Runtime.Data;
 using UnityEngine;
 
 namespace Postive.BehaviourTrees.Runtime.Nodes.Actions.BlackBoards
 {
+    [BTCategory("BlackBoard", "Removes a key-value pair from the blackboard.")]
     public class MessageRemoveNode : ActionNode
     {
-        public override string NodeCategory => "BlackBoard";
         [SerializeField] private string _key;
         protected override BTState OnRun(BlackBoard blackBoard)
         {

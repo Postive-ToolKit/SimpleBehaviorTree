@@ -1,11 +1,12 @@
-﻿using Postive.BehaviourTrees.Runtime.Data;
+﻿using Postive.BehaviourTrees.Runtime.Attributes;
+using Postive.BehaviourTrees.Runtime.Data;
 using UnityEngine;
 
 namespace Postive.BehaviourTrees.Runtime.Nodes.Decorators
 {
+    [BTCategory("BlackBoard", "Decorator that provides a blackboard context for child nodes.")]
     public class BlackBoardNode : DecoratorNode
     {
-        public override string NodeCategory => "BlackBoard";
         public BlackBoard BlackBoard => _blackBoard;
         [SerializeField] private BlackBoard _blackBoard;
         protected override void OnStart(BlackBoard blackBoard) {

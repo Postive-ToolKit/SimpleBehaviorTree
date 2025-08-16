@@ -4,7 +4,9 @@ using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine.UIElements;
 using System.Linq;
+using System.Reflection;
 using Postive.BehaviourTrees.Runtime;
+using Postive.BehaviourTrees.Runtime.Attributes;
 using Postive.BehaviourTrees.Runtime.Conditions;
 using Postive.BehaviourTrees.Runtime.Nodes;
 using Postive.BehaviourTrees.Runtime.Nodes.Actions;
@@ -133,31 +135,20 @@ namespace Postive.BehaviourTrees.Editor
 
         public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
         {
-            Vector2 mousePosition = viewTransform.matrix.inverse.MultiplyPoint(evt.localMousePosition);
+            var mousePosition = viewTransform.matrix.inverse.MultiplyPoint(evt.localMousePosition);
             
             var types = TypeCache.GetTypesDerivedFrom<ActionNode>().OrderBy(t => t.Name);
             foreach (var type in types) {
-                // //create variable with type
-                //remove abstract classes
-                if (type.IsAbstract) continue;
-                var instance = ScriptableObject.CreateInstance(type);
-                string category = "";
-                // Cast the instance to BTNode and access the Category property
-                if (instance is BTNode btNodeInstance) {
-                    category = btNodeInstance.NodeCategory + "/";
-                }
-                evt.menu.AppendAction($"ActionNode/{(string.IsNullOrEmpty(category) ? "/" : category)}{type.Name}", a => CreateNode(type,mousePosition));
+                if (type.IsAbstract)
+                    continue;
+                var category = GetNodeCategory(type);
+                evt.menu.AppendAction($"ActionNode/{category}/{type.Name}", a => CreateNode(type,mousePosition));
             }
             types = TypeCache.GetTypesDerivedFrom<ConditionNode>().OrderBy(t => t.Name);
             foreach (var type in types) {
                 if (type.IsAbstract) continue;
-                var instance = ScriptableObject.CreateInstance(type);
-                string category = "";
-                // Cast the instance to BTNode and access the Category property
-                if (instance is BTNode btNodeInstance) {
-                    category = btNodeInstance.NodeCategory + "/";
-                }
-                evt.menu.AppendAction($"ConditionNode/{(string.IsNullOrEmpty(category) ? "/" : category)}{type.Name}", a => CreateNode(type,mousePosition));
+                var category = GetNodeCategory(type);
+                evt.menu.AppendAction($"ConditionNode/{category}/{type.Name}", a => CreateNode(type,mousePosition));
             }
             types = TypeCache.GetTypesDerivedFrom<CompositeNode>().OrderBy(t => t.Name);
             foreach (var type in types) {
@@ -167,12 +158,8 @@ namespace Postive.BehaviourTrees.Editor
             types = TypeCache.GetTypesDerivedFrom<DecoratorNode>().OrderBy(t => t.Name);
             foreach (var type in types) {
                 if (type.IsAbstract) continue;
-                var instance = ScriptableObject.CreateInstance(type);
-                string category = "";
-                if (instance is BTNode btNodeInstance) {
-                    category = btNodeInstance.NodeCategory + "/";
-                }
-                evt.menu.AppendAction($"DecoratorNode/{(string.IsNullOrEmpty(category) ? "/" : category)}{type.Name}", a => CreateNode(type,mousePosition));
+                var category = GetNodeCategory(type);
+                evt.menu.AppendAction($"DecoratorNode/{category}/{type.Name}", a => CreateNode(type,mousePosition));
             }
             evt.menu.AppendSeparator();
             evt.menu.AppendAction("Sort Nodes", a => SortNodes());
@@ -356,6 +343,23 @@ namespace Postive.BehaviourTrees.Editor
             BTNodeView nodeView = new BTNodeView(node);
             nodeView.OnNodeSelected += OnNodeSelectionChanged;
             AddElement(nodeView);
+        }
+        #endregion
+
+        #region Attribute Methods
+        private T GetAttribute<T>(Type type) where T : Attribute
+        {
+            var attributes = type.GetCustomAttributes<T>().FirstOrDefault();
+            if (attributes == null) {
+                return null;
+            }
+            return attributes;
+        }
+        
+        private string GetNodeCategory(Type type)
+        {
+            var attribute = GetAttribute<BTCategoryAttribute>(type);
+            return attribute != null ? attribute.Category : "Base";
         }
         #endregion
     }

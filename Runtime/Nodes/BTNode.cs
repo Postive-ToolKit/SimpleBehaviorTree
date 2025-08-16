@@ -6,7 +6,6 @@ namespace Postive.BehaviourTrees.Runtime.Nodes
 {
     public abstract class BTNode : ScriptableObject
     {
-        public virtual string NodeCategory => "Default";
         [HideInInspector] public BTState State = BTState.NOT_ENTERED;
         [HideInInspector] public string GUID;
         public Vector2 Position {

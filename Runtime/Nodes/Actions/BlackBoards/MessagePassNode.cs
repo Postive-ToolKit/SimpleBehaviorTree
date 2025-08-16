@@ -1,11 +1,12 @@
-﻿using Postive.BehaviourTrees.Runtime.Data;
+﻿using Postive.BehaviourTrees.Runtime.Attributes;
+using Postive.BehaviourTrees.Runtime.Data;
 using UnityEngine;
 
 namespace Postive.BehaviourTrees.Runtime.Nodes.Actions.BlackBoards
 {
+    [BTCategory("BlackBoard", "Passes a message to the blackboard with a specified key.")]
     public class MessagePassNode : ActionNode
     {
-        public override string NodeCategory => "BlackBoard";
         [SerializeField] private string _key = "Key";
         [SerializeField] private string _message = "Message";
         protected override BTState OnRun(BlackBoard blackBoard)

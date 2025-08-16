@@ -1,12 +1,13 @@
-﻿using Postive.BehaviourTrees.Runtime.Data;
+﻿using Postive.BehaviourTrees.Runtime.Attributes;
+using Postive.BehaviourTrees.Runtime.Data;
 using Postive.BehaviourTrees.Runtime.Nodes;
 using UnityEngine;
 
 namespace Postive.BehaviourTrees.Runtime.Conditions.BlackBoards
 {
+    [BTCategory("BlackBoard", "Checks if a message received from the blackboard matches a specified value.")]
     public class MessageReceiveNode : ConditionNode
     {
-        public override string NodeCategory => "BlackBoard";
         [SerializeField] private string _key = "Key";
         [SerializeField] private string _message = "Message";
         protected override BTState GetConditionState(BlackBoard blackBoard) {
